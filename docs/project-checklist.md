@@ -13,7 +13,7 @@
 - [x] Stage 1. Discovery and decisions freeze
   - Зафиксированы базовые решения по слоту, hold, quantity, JWT, Redis, counters-модели и expiry-поведению.
 - [x] Stage 2. Project bootstrap
-  - Создан Laravel bootstrap, поднят runtime-каркас, возвращена проектная документация, настроен Git и remote.
+  - Создан Laravel bootstrap, поднят runtime-каркас, возвращена проектная документация, настроен Git и remote, первый коммит отправлен в `origin/main`.
 - [ ] Stage 3. Persistence
   - Миграции `slots`, `holds`, уточнение ограничений и индексов.
 - [ ] Stage 4. Auth skeleton
