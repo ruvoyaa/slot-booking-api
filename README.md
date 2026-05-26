@@ -22,6 +22,8 @@
 - отдельный project checklist;
 - отдельный документ с зафиксированными test cases и фактическими результатами.
 
+Повторная проверка после перевода проекта на `Laravel 12` выполнена на SQL runtime через `mysql` driver.
+
 Актуальные проектные документы:
 
 - [docs/project-context.md](docs/project-context.md)
@@ -34,12 +36,18 @@
 
 ## Стек
 
-- Laravel 13
+- Laravel 12
 - PHP 8.4
-- SQLite для локального bootstrap и тестов
 - MySQL 8+ как целевой runtime по ТЗ
+- SQLite in-memory используется в automated feature tests
 - custom minimal JWT auth
 - Redis как целевой cache/lock backend
+
+Фактически локальный SQL runtime, на котором выполнен второй verification pass:
+
+- `MariaDB 10.11` через `mysql` driver
+
+Для текущего проекта этого достаточно: `MariaDB 10.11` совместима с используемым здесь подмножеством `MySQL 8` на нужном нам уровне проверки, поэтому на dev-сервере менять её не требуется.
 
 ## Важная оговорка по кешу
 
@@ -68,6 +76,17 @@ composer install
 ```bash
 cp .env.example .env
 php artisan key:generate
+```
+
+Заполни MySQL-подключение в `.env`:
+
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=slot_booking_api
+DB_USERNAME=<user>
+DB_PASSWORD=<password>
 ```
 
 ### 3. Миграции и сидинг
@@ -272,10 +291,33 @@ php artisan test
 - feature suite проходит полностью;
 - результаты кейсов зафиксированы в [docs/test-cases.md](docs/test-cases.md).
 
-## Что ещё остаётся
+## Статус project checklist
 
-Следующие этапы по project checklist:
+Все этапы MVP по `docs/project-checklist.md` на текущий момент закрыты, включая:
 
 - Stage 8. README and curl scenarios
 - Stage 9. Local verification
 - Stage 10. Review and fixes
+
+## Checklist соответствия ТЗ
+
+Полный отдельный срез лежит в `docs/task-compliance-checklist.md`.
+
+Короткий итог по `docs/task`:
+
+- [x] Все основные API endpoints из ТЗ реализованы.
+- [x] Кеш availability, инвалидация кеша, транзакции и защита от оверсела реализованы.
+- [x] Идемпотентность `hold` реализована.
+- [x] TTL hold на 5 минут реализован.
+- [x] Миграции, `routes/api.php`, контроллеры и `SlotService` реализованы.
+- [x] README и curl-сценарии подготовлены.
+- [x] Feature-тесты добавлены и проходят.
+- [x] ТЗ по сути закрыто.
+
+Оговорки по соответствию ТЗ:
+
+- Приложение переведено на `Laravel 12`.
+- Automated feature-тесты по-прежнему идут на `SQLite in-memory`, но целевой runtime по ТЗ остаётся `MySQL 8+`.
+- Прямая локальная SQL-верификация подтверждена на `MariaDB 10.11` через `mysql` driver; для текущего проекта и dev-сервера это считаем достаточным эквивалентом требуемого `MySQL 8+`, поэтому замену СУБД не планируем.
+- Полная lock-механика cache stampede ориентирована на `Redis`; локально используется fallback.
+- `JWT` добавлена как проектное расширение, хотя в исходном ТЗ не была обязательной.

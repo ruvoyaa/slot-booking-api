@@ -2,7 +2,7 @@
 
 ## Stack
 
-- Laravel 13
+- Laravel 12
 - PHP 8.2+
 - MySQL 8+
 - custom minimal JWT auth

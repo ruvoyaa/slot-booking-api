@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,15 +15,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon $end_at
  * @property-read Collection<int, Hold> $holds
  */
-#[Fillable([
-    'capacity',
-    'held_count',
-    'confirmed_count',
-    'start_at',
-    'end_at',
-])]
 class Slot extends Model
 {
+    protected $fillable = [
+        'capacity',
+        'held_count',
+        'confirmed_count',
+        'start_at',
+        'end_at',
+    ];
+
     protected function casts(): array
     {
         return [

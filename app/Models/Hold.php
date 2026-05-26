@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\HoldStatus;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,16 +17,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Slot $slot
  * @property-read User $user
  */
-#[Fillable([
-    'slot_id',
-    'user_id',
-    'status',
-    'quantity',
-    'idempotency_key',
-    'expires_at',
-])]
 class Hold extends Model
 {
+    protected $fillable = [
+        'slot_id',
+        'user_id',
+        'status',
+        'quantity',
+        'idempotency_key',
+        'expires_at',
+    ];
+
     protected function casts(): array
     {
         return [
