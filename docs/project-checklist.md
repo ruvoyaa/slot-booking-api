@@ -14,33 +14,29 @@
   - Зафиксированы базовые решения по слоту, hold, quantity, JWT, Redis, counters-модели и expiry-поведению.
 - [x] Stage 2. Project bootstrap
   - Создан Laravel bootstrap, поднят runtime-каркас, возвращена проектная документация, настроен Git и remote, первый коммит отправлен в `origin/main`.
-- [ ] Stage 3. Persistence
-  - Миграции `slots`, `holds`, уточнение ограничений и индексов.
-- [ ] Stage 4. Auth skeleton
-  - Минимальная custom JWT-авторизация, middleware, привязка текущего пользователя.
-- [ ] Stage 5. Service layer
-  - `SlotService`, транзакции, идемпотентность, cache invalidation, lock-механика.
-- [ ] Stage 6. API layer
-  - `GET /api/slots/availability`
-  - `POST /api/slots/{id}/hold`
-  - `POST /api/holds/{id}/confirm`
-  - `DELETE /api/holds/{id}`
-- [ ] Stage 7. Tests
-  - Feature-тесты по availability, hold, confirm, cancel, oversell, auth, idempotency.
-- [ ] Stage 8. README and curl scenarios
-  - Инструкции запуска, миграции, auth, примеры curl и сценарии проверки.
-- [ ] Stage 9. Local verification
-  - Проверка `php artisan migrate`, локального запуска, Redis, curl-сценариев.
-- [ ] Stage 10. Review and fixes
-  - Финальная проверка рисков, регрессий и корректности счетчиков.
+- [x] Stage 3. Persistence
+  - Добавлены миграции `slots` и `holds`, зафиксированы основные индексы и ограничения, схема проверена через `php artisan migrate:fresh`.
+- [x] Stage 4. Auth skeleton
+  - Добавлены custom JWT login/me flow, middleware, привязка текущего пользователя, локальная проверка пройдена на `127.0.0.1:8000`.
+- [x] Stage 5. Service layer
+  - Добавлены `SlotService`, доменные статусы, модели `Slot`/`Hold`, транзакции, idempotency, cache invalidation и lock-механика; сервисный smoke-test пройден, база возвращена в чистое seeded-состояние.
+- [x] Stage 6. API layer
+  - Добавлены `AvailabilityController` и `HoldController`, маршруты посажены на `SlotService`, HTTP smoke-проверка `availability -> hold -> confirm -> cancel` пройдена, база возвращена в seeded-состояние.
+- [x] Stage 7. Tests
+  - Добавлены 10 feature-тестов по availability, hold, confirm, cancel, oversell, auth и idempotency; suite проходит полностью (`10/10`), результаты зафиксированы в `docs/test-cases.md`.
+- [x] Stage 8. README and curl scenarios
+  - README приведён к runnable-формату: запуск, миграции, seeded user, auth flow, curl-сценарии и оговорки по локальному cache backend зафиксированы.
+- [x] Stage 9. Local verification
+  - Повторно подтверждены `migrate:fresh --seed`, `php artisan test`, seeded-состояние базы, внешний runtime на `0.0.0.0:8000`, внешний `GET /api/slots/availability` и внешний `POST /api/auth/login`.
+- [x] Stage 10. Review and fixes
+  - Закрыты review-риски по конкурентной идемпотентности `hold`, продуктовые допущения переведены в явные решения, test suite повторно подтверждён (`10/10`).
 
 ## Current Focus
 
 Следующий этап:
 
-- Stage 3. Persistence
+- MVP stage set завершён, дальше только следующий функциональный цикл или подготовка к релизу.
 
 Текущие открытые вопросы перед/внутри реализации:
 
-- можно ли одному пользователю иметь несколько hold на один слот;
-- нужно ли хранить полный прошлый response для идемпотентности.
+- открытых продуктовых вопросов по текущему MVP больше не осталось; дальнейшие решения уже относятся к следующему расширению функциональности.

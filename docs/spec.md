@@ -96,10 +96,10 @@ Idempotency-Key: <UUID>
 - `cancelled`
 - `expired`
 
-## Open Questions From Brief
+## Resolved Product Decisions
 
-1. Можно ли создать несколько hold одним пользователем на один слот?
-2. Нужно ли хранить полный прошлый response для идемпотентности?
+1. Одному пользователю разрешено иметь несколько hold на один слот, если используются разные `Idempotency-Key` и хватает доступности.
+2. Полный прошлый raw-response для идемпотентности не хранится; при повторе возвращается существующий hold как текущий ресурс.
 
 ## Discovery Decisions
 
@@ -115,6 +115,8 @@ Idempotency-Key: <UUID>
 - базовая модель остатков: в `slots` храним `capacity`, `held_count`, `confirmed_count`, а доступность считаем как `capacity - held_count - confirmed_count`.
 - при `confirm` просроченный hold реактивно освобождает ранее занятый `held_count` и возвращает `409 Conflict`.
 - `Idempotency-Key` уникален в рамках `user_id`.
+- одному пользователю разрешены несколько hold на один слот при разных `Idempotency-Key`;
+- для идемпотентности не хранится отдельный снимок старого HTTP body, возвращается актуальное представление существующего hold.
 
 ## Fixed Capacity Model
 
